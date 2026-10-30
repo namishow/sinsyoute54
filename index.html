@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>日本史探究 小テスト：初期議会と条約改正</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'M PLUS Rounded 1c', sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #312e81 100%);
+            min-height: 100vh;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.96);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+        }
+        .pulse-animation {
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.03); }
+        }
+    </style>
+</head>
+<body class="text-gray-800 flex flex-col justify-between min-h-screen p-3 md:p-6">
+
+    <!-- Header -->
+    <header class="max-w-3xl mx-auto w-full text-center my-3">
+        <div class="inline-flex items-center gap-1.5 bg-amber-400 text-amber-950 text-xs font-extrabold px-3 py-1 rounded-full mb-2 shadow">
+            <i class="fa-solid fa-graduation-cap"></i> 高校日本史探究 プリントNo.54 完全網羅
+        </div>
+        <h1 class="text-2xl md:text-3xl font-extrabold text-white tracking-wide shadow-text flex items-center justify-center gap-2">
+            <span>大正政変・第一次世界大戦マスター</span>
+        </h1>
+        <p class="text-indigo-200 text-xs md:text-sm mt-1">護憲運動・大正政変からWWI参戦・二十一ヵ条要求・シベリア出兵・米騒動まで！</p>
+    </header>
+
+    <!-- Main Container -->
+    <main class="max-w-2xl mx-auto w-full flex-grow flex items-center justify-center">
+
+        <!-- START SCREEN -->
+        <div id="start-screen" class="glass-card rounded-3xl p-6 md:p-8 shadow-2xl w-full text-center transition-all duration-300">
+            <div class="text-5xl text-indigo-600 mb-3">
+                <i class="fa-solid fa-peace"></i>
+            </div>
+            <h2 class="text-2xl font-black text-gray-800 mb-2">日本史一問一答クイズ</h2>
+            <p class="text-gray-600 text-xs md:text-sm mb-5 leading-relaxed">
+                全16問の4択形式問題です。<br>
+                第1次護憲運動・大正政変・シーメンス事件・WWI参戦・二十一ヵ条の要求・石井ランシング協定・シベリア出兵・米騒動を完全網羅！
+            </p>
+
+            <div class="bg-indigo-50/80 rounded-2xl p-4 mb-6 text-left border border-indigo-100">
+                <h3 class="font-bold text-indigo-900 text-xs md:text-sm mb-2 flex items-center gap-1.5">
+                    <i class="fa-solid fa-star text-amber-500"></i> このクイズの特徴
+                </h3>
+                <ul class="text-xs text-indigo-800 space-y-1.5">
+                    <li><i class="fa-solid fa-check text-green-500 mr-1"></i> 正解・不正解の和風効果音（BGM/SE）付き</li>
+                    <li><i class="fa-solid fa-check text-green-500 mr-1"></i> 選択肢の答えの番号は完全均等（1~4各4問ずつ）</li>
+                    <li><i class="fa-solid fa-check text-green-500 mr-1"></i> 首相語呂「や・お・て・は・た...」＆WWI・大陸進出の要点モーダル搭載</li>
+                </ul>
+            </div>
+
+            <button onclick="startQuiz()" class="pulse-animation w-full bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white font-black text-lg py-3.5 px-8 rounded-2xl shadow-lg hover:shadow-indigo-500/50 transition-all flex items-center justify-center gap-2">
+                <i class="fa-solid fa-play"></i> テストを開始する！
+            </button>
+        </div>
+
+        <!-- QUIZ SCREEN -->
+        <div id="quiz-screen" class="glass-card rounded-3xl p-5 md:p-7 shadow-2xl w-full hidden transition-all duration-300">
+            <!-- Progress & Stats -->
+            <div class="flex justify-between items-center mb-3 pb-3 border-b border-gray-200">
+                <div class="flex items-center gap-2">
+                    <span id="question-number" class="bg-indigo-600 text-white text-xs font-bold px-3 py-1 rounded-full">Q.1 / 16</span>
+                    <span id="combo-badge" class="hidden bg-amber-500 text-white text-xs font-bold px-2 py-0.5 rounded-full animate-bounce">
+                        <i class="fa-solid fa-fire"></i> <span id="combo-count">0</span> コンボ!
+                    </span>
+                </div>
+                <div class="text-sm font-bold text-gray-600">
+                    スコア: <span id="current-score" class="text-indigo-600 font-black text-lg">0</span>
+                </div>
+            </div>
+
+            <!-- Progress Bar -->
+            <div class="w-full bg-gray-200 rounded-full h-2 mb-5 overflow-hidden">
+                <div id="progress-bar" class="bg-indigo-600 h-2 rounded-full transition-all duration-300" style="width: 0%"></div>
+            </div>
+
+            <!-- Question Text -->
+            <div class="mb-5">
+                <span id="question-category" class="text-xs font-bold text-indigo-600 tracking-wider uppercase">大正政変・第一次世界大戦 (No.54)</span>
+                <h3 id="question-text" class="text-base md:text-lg font-bold text-gray-800 mt-1 leading-snug">
+                    問題文がここに入ります。
+                </h3>
+            </div>
+
+            <!-- Options -->
+            <div id="options-container" class="space-y-2.5 mb-5">
+                <!-- Option buttons generated by JS -->
+            </div>
+
+            <!-- Feedback Area (Explanation) -->
+            <div id="explanation-card" class="hidden bg-slate-800 text-white rounded-2xl p-4 mb-4 border border-slate-700 animate-fade-in">
+                <div class="flex items-center gap-2 mb-1">
+                    <span id="result-icon" class="text-xl"></span>
+                    <h4 id="result-text" class="font-extrabold text-sm md:text-base">正解！</h4>
+                </div>
+                <p id="explanation-text" class="text-xs md:text-sm text-slate-300 leading-relaxed">
+                    解説文がここに入ります。
+                </p>
+            </div>
+
+            <!-- Next Button -->
+            <button id="next-btn" onclick="nextQuestion()" class="hidden w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-3 px-6 rounded-xl shadow transition-all flex items-center justify-center gap-2">
+                次へ進む <i class="fa-solid fa-arrow-right"></i>
+            </button>
+        </div>
+
+        <!-- RESULT SCREEN -->
+        <div id="result-screen" class="glass-card rounded-3xl p-6 md:p-8 shadow-2xl w-full text-center hidden transition-all duration-300">
+            <div id="result-badge" class="inline-block p-4 rounded-full bg-amber-100 text-amber-500 text-4xl mb-3 shadow-inner">
+                <i class="fa-solid fa-trophy"></i>
+            </div>
+            <h2 class="text-2xl font-black text-gray-800 mb-1">テスト結果</h2>
+            <p id="result-rank" class="text-xs md:text-sm font-bold text-indigo-600 mb-4">ランク判定中...</p>
+
+            <div class="bg-indigo-50/80 rounded-2xl p-5 mb-5">
+                <div class="text-xs text-indigo-600 font-bold uppercase tracking-wider mb-1">最終スコア</div>
+                <div class="text-4xl md:text-5xl font-black text-indigo-900 mb-1">
+                    <span id="final-score">0</span> <span class="text-base font-normal text-indigo-700">/ 100 点</span>
+                </div>
+                <p id="correct-count-text" class="text-xs text-indigo-800">16問中 0問 正解</p>
+            </div>
+
+            <div id="result-comment" class="bg-white p-4 rounded-xl border border-gray-200 text-xs md:text-sm text-gray-700 mb-5 text-left leading-relaxed">
+                コメント
+            </div>
+
+            <div class="flex flex-col sm:flex-row gap-2.5">
+                <button onclick="startQuiz()" class="flex-1 bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-3 px-4 rounded-xl shadow transition-all flex items-center justify-center gap-2 text-sm">
+                    <i class="fa-solid fa-rotate-right"></i> もう一度挑戦
+                </button>
+                <button onclick="toggleMnemonicsModal()" class="flex-1 bg-amber-500 hover:bg-amber-400 text-white font-bold py-3 px-4 rounded-xl shadow transition-all flex items-center justify-center gap-2 text-sm">
+                    <i class="fa-solid fa-lightbulb"></i> 大正時代（No.54）の要点整理
+                </button>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Mnemonics Modal (暗記ポイント) -->
+    <div id="mnemonics-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl relative max-h-[85vh] overflow-y-auto">
+            <button onclick="toggleMnemonicsModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 text-xl">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <h3 class="text-lg font-black text-gray-800 mb-1 flex items-center gap-2">
+                <i class="fa-solid fa-key text-amber-500"></i> 大正政変・第一次世界大戦の要点
+            </h3>
+            <p class="text-xs text-gray-500 mb-4">プリントNo.54を完全攻略する知識まとめ！</p>
+
+            <div class="space-y-2.5 text-xs text-gray-700">
+                <div class="p-3 bg-indigo-50 rounded-xl border border-indigo-200">
+                    <span class="font-bold text-indigo-900 block mb-1">👑 時代を動かした首相語呂合わせ：</span>
+                    <p class="text-xs text-indigo-800 font-bold">
+                        や・お・て・は・た・か・や・き<br>
+                        <span class="font-normal text-indigo-700">（山本権兵衛 $\rightarrow$ 大隈重信 $\rightarrow$ 寺内正毅 $\rightarrow$ 原敬 $\rightarrow$ 高橋是清 $\rightarrow$ 加藤友三郎 $\rightarrow$ 山本権兵衛 $\rightarrow$ 清浦奎吾）</span>
+                    </p>
+                </div>
+                <div class="p-2.5 bg-amber-50 rounded-xl border border-amber-200">
+                    <span class="font-bold text-amber-900">✊ 第1次護憲運動と大正政変：</span>
+                    <p class="text-xs text-amber-900 mt-1">
+                        ・スローガン：「<b>閥族打破・憲政擁護</b>」<br>
+                        ・中心人物：<b>尾崎行雄</b>（政友会）・<b>犬養毅</b>（立憲国民党）<br>
+                        ・結果：<b>第3次桂太郎内閣がわずか53日で倒閣</b>（大正政変）
+                    </p>
+                </div>
+                <div class="p-2.5 bg-rose-50 rounded-xl border border-rose-200">
+                    <span class="font-bold text-rose-900 block mb-1">🌏 大陸外交と第二次世界大戦の流れ：</span>
+                    <ul class="list-disc list-inside space-y-1 text-rose-900">
+                        <li><b>二十一ヵ条の要求(1915)</b>：第2次大隈内閣（加藤高明外相）が袁世凱政府へ提出。山東省権益継承、旅順・大連・満鉄利権99年延長など。</li>
+                        <li><b>石井・ランシング協定(1917)</b>：日本の満洲での特殊権益と中国の領土保全を米・日で相互承認。</li>
+                        <li><b>西原借款</b>：寺内内閣が中国の段祺瑞政権へ多額の借款を供与。</li>
+                        <li><b>シベリア出兵(1918) $\rightarrow$ 米騒動</b>：ロシア革命に対抗・チェコ軍救出名目で出兵。米の買い占めで富山県（越中女一揆）から全国へ波及し寺内内閣総辞職！</li>
+                    </ul>
+                </div>
+            </div>
+
+            <button onclick="toggleMnemonicsModal()" class="w-full mt-5 bg-slate-800 text-white font-bold py-2.5 rounded-xl text-sm">
+                閉じる
+            </button>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="text-center text-xs text-indigo-200 py-3">
+        日本史探究 授業サポートアプリ | 桂園時代・韓国併合編
+    </footer>
+
+    <!-- JavaScript Quiz Logic & Web Audio API -->
+    <script>
+        // ... existing sound system code ...
+
+        // ==========================================
+        // Quiz Data (16 Questions - Balanced Answers 1-4: 4 of each)
+        // Correct answers distribution:
+        // Option 0 (1番) -> 4件 [Q1, Q5, Q9, Q13]
+        // Option 1 (2番) -> 4件 [Q2, Q6, Q10, Q14]
+        // Option 2 (3番) -> 4件 [Q3, Q7, Q11, Q15]
+        // Option 3 (4番) -> 4件 [Q4, Q8, Q12, Q16]
+        // ==========================================
+        const quizData = [
+            // Q1: 正解 = 1番 (index 0)
+            {
+                category: "1. 第1次護憲運動 (No.54)",
+                question: "1912年、陸軍の2個師団増設要求を突っぱねた第2次西園寺公望内閣に対し、陸相が単独で辞任（帷幄上奏）したことで勃発した政変に端を発し、桂太郎内閣を53日で総辞職に追い込んだ政治運動は何か？",
+                options: [
+                    "第1次護憲運動",
+                    "大同団結運動",
+                    "自由民権運動",
+                    "三大事件建白運動"
+                ],
+                answer: 0,
+                explanation: "上原勇作陸相の辞任から第3次桂内閣が成立したものの、「閥族打破・憲政擁護」を掲げた第1次護憲運動が広がり、桂内閣はわずか53日で倒閣（大正政変）されました。"
+            },
+            // Q2: 正解 = 2番 (index 1)
+            {
+                category: "2. 護憲運動のリーダー (No.54)",
+                question: "第1次護憲運動において「憲政の神様」と称され、立憲政友会の尾崎行雄とともに運動の先頭に立った立憲国民党の政治家は誰か？",
+                options: [
+                    "加藤高明",
+                    "犬養毅",
+                    "後藤新平",
+                    "吉野作造"
+                ],
+                answer: 1,
+                explanation: "立憲政友会の尾崎行雄と立憲国民党の犬養毅（いぬかいつよし）が「閥族打破・憲政擁護」を叫び、第1次護憲運動を中心となって牽引しました。"
+            },
+            // Q3: 正解 = 3番 (index 2)
+            {
+                category: "3. 山本権兵衛内閣の改革 (No.54)",
+                question: "薩摩藩閥・海軍出身の第1次山本権兵衛内閣（1913年）が行った行政改革として正しいものはどれか？",
+                options: [
+                    "地方三新法の制定",
+                    "保安条例の発布",
+                    "軍部大臣現役武官制の現役制廃止",
+                    "文官任用令の厳格化"
+                ],
+                answer: 2,
+                explanation: "第1次山本権兵衛内閣は与党政友会と連携し、軍部大臣現役武官制の「現役制限」を緩和（予備役・後備役でも就任可）し、文官任用令も再改正しました。"
+            },
+            // Q4: 正解 = 4番 (index 3)
+            {
+                category: "4. 山本内閣の退陣原因 (No.54)",
+                question: "海軍の艦艇納入をめぐり、ドイツの会社から高官への贈賄工作が発覚して国民の激しい怒りを買い、第1次山本権兵衛内閣を総辞職に追い込んだ汚職事件は何か？",
+                options: [
+                    "帝人事件",
+                    "造船疑獄事件",
+                    "松島遊郭事件",
+                    "シーメンス事件"
+                ],
+                answer: 3,
+                explanation: "1914年に発覚したシーメンス事件（ドイツのシーメンス社やイギリスのヴィッカース社からの海軍高官賄賂受領）により、山本内閣は倒閣に追い込まれました。"
+            },
+            // Q5: 正解 = 1番 (index 0)
+            {
+                category: "5. 第一次世界大戦の開戦契機 (No.54)",
+                question: "1914年7月、オーストリア皇太子夫妻がセ ルビア人青年に暗殺されたことを契機に第一次世界大戦が勃発した事件は何か？",
+                options: [
+                    "サライェヴォ事件",
+                    "尼港事件",
+                    "義和団事件",
+                    "江華島事件"
+                ],
+                answer: 0,
+                explanation: "サライェヴォ事件（サライエボ事件）をきっかけに、三国同盟（独・墺・伊）と三国協商（英・仏・露）の対立が爆発し、第一次世界大戦が始まりました。"
+            },
+            // Q6: 正解 = 2番 (index 1)
+            {
+                category: "6. 日本のWWI参戦 (No.54)",
+                question: "第一次世界大戦が勃発した際、日本（第2次大隈重信内閣）は何を口実にしてドイツに宣戦布告し、参戦したか？",
+                options: [
+                    "日米通商航海条約",
+                    "日英同盟",
+                    "日露協約",
+                    "四カ国条約"
+                ],
+                answer: 1,
+                explanation: "第2次大隈重信内閣は「日英同盟」の情誼を口実として1914年8月にドイツへ宣戦布告し、東アジア・太平洋のドイツ権益を攻略しました。"
+            },
+            // Q7: 正解 = 3番 (index 2)
+            {
+                category: "7. 二十一ヵ条の要求 (No.54)",
+                question: "1915年、第2次大隈重信内閣の加藤高明外相が中華民国の袁世凱政府に提出した「二十一ヵ条の要求」に含まれる内容として正しいものはどれか？",
+                options: [
+                    "韓国の保護国化と統監府の設置",
+                    "台湾および澎湖諸島の完全割譲",
+                    "山東省の旧ドイツ権益継承と旅順・大連租借期限99年延長",
+                    "北京周辺への軍隊常駐権の獲得"
+                ],
+                answer: 2,
+                explanation: "二十一ヵ条の要求では、山東省の旧ドイツ権益の継承、南満洲・東部内蒙古での利権（旅順・大連租借期や満鉄経営など）の99年延長などが要求されました。"
+            },
+            // Q8: 正解 = 4番 (index 3)
+            {
+                category: "8. 対中借款政策 (No.54)",
+                question: "寺内正毅内閣期、中国の軍閥である段祺瑞（たんきずい）政権に対して巨額の無担保資金を供与し、日本の影響力拡大を図った秘密借款は何か？",
+                options: [
+                    "勝田借款",
+                    "高橋借款",
+                    "井上借款",
+                    "西原借款"
+                ],
+                answer: 3,
+                explanation: "寺内正毅内閣は勝田主計蔵相のもと、私設秘書の西原亀三（にしはらかめぞう）を通じて段祺瑞政権へ巨額の「西原借款」を与えました。"
+            },
+            // Q9: 正解 = 1番 (index 0)
+            {
+                category: "9. 日米間の協定 (No.54)",
+                question: "1917年、アメリカの参戦に伴い、日本の特使・石井菊次郎と米国務長官との間で結ばれ、日本の満洲での特殊権益承認と中国の領土保全・機会均等を相互確認した協定は何か？",
+                options: [
+                    "石井・ランシング協定",
+                    "桂・タフト協定",
+                    "新日米通商航海条約",
+                    "ワシントン九カ国条約"
+                ],
+                answer: 0,
+                explanation: "1917年の石井・ランシング協定により、アメリカは日本の中国における特殊な利害関係を認め、日本も中国の領土保全と門戸開放を承認しました。"
+            },
+            // Q10: 正解 = 2番 (index 1)
+            {
+                category: "10. シベリア出兵 (No.54)",
+                question: "1917年のロシア革命（ソヴィエト政権成立）後、1918年に寺内正毅内閣が米・英・仏とともに大規模な軍隊を派遣した名目（口実）は何か？",
+                options: [
+                    "東清鉄道の防衛",
+                    "孤立したチェコ軍団（チェコ軍）の救出",
+                    "義和団による公使館包囲の鎮圧",
+                    "ロシア皇帝ニコライ2世の復位"
+                ],
+                answer: 1,
+                explanation: "日本や連合国は「孤立したチェコ軍（チェコ軍団）の救出」を表向きの理由としてシベリア出兵を開始しましたが、実質はロシア革命への干渉・牽制でした。"
+            },
+            // Q11: 正解 = 3番 (index 2)
+            {
+                category: "11. シベリア出兵中の悲劇 (No.54)",
+                question: "シベリア出兵中の1920年、ニコラエフスク（尼港）で赤軍（パルチザン）により日本の駐屯部隊および邦人住民数百名が殺害された事件は何か？",
+                options: [
+                    "万宝山事件",
+                    "柳条湖事件",
+                    "尼港事件（ニコラエフスク事件）",
+                    "済南事件"
+                ],
+                answer: 2,
+                explanation: "1920年の尼港事件（ニコラエフスク事件）では、赤軍過激派によって日本の領事一家や住民・守備隊多数が虐殺されました。"
+            },
+            // Q12: 正解 = 4番 (index 3)
+            {
+                category: "12. 米騒動の勃発 (No.54)",
+                question: "1918年夏、シベリア出兵を見越した米商人の買い占めやインフレによる米価暴騰に対し、富山県の漁村の主婦らが米の移出食い止めに立ち上がった民衆運動（騒動）の契機となった出来事は何か？",
+                options: [
+                    "血税一揆",
+                    "秩父困民党の騒動",
+                    "山城国一揆",
+                    "越中女一揆（富山県の米よこせ運動）"
+                ],
+                answer: 3,
+                explanation: "富山県魚津町などの主婦らが米の船積み防止を求めた「越中女一揆」が全国に報道され、1道3府38県に広がる「1918年米騒動」へ発展しました。"
+            },
+            // Q13: 正解 = 1番 (index 0)
+            {
+                category: "13. 米騒動の影響 (No.54)",
+                question: "全国で約70万人が参加し、軍隊が出動する事態にまで発展した1918年の米騒動の結果、政治的に起こった直接的な変化はどれか？",
+                options: [
+                    "寺内正毅内閣が総辞職し、原敬本格的政党内閣が成立した",
+                    "第2次大隈重信内閣が解散総選挙を行った",
+                    "山本権兵衛内閣が治安警察法を強化した",
+                    "桂太郎内閣が新党（立憲同志会）を結成した"
+                ],
+                answer: 0,
+                explanation: "米騒動の収拾に失敗した超然内閣の寺内正毅内閣は辞職に追い込まれ、立憲政友会総裁の原敬（はらたかし）による本格的政党内閣が誕生しました。"
+            },
+            // Q14: 正解 = 2番 (index 1)
+            {
+                category: "14. 大正時代の首相変遷 (No.54)",
+                question: "プリント54の範囲における日本の首相の変遷の組み合わせとして正しいものはどれか？",
+                options: [
+                    "桂太郎 $\rightarrow$ 寺内正毅 $\rightarrow$ 山本権兵衛 $\rightarrow$ 大隈重信",
+                    "西園寺公望 $\rightarrow$ 桂太郎 $\rightarrow$ 山本権兵衛 $\rightarrow$ 大隈重信 $\rightarrow$ 寺内正毅",
+                    "大隈重信 $\rightarrow$ 山本権兵衛 $\rightarrow$ 寺内正毅 $\rightarrow$ 桂太郎",
+                    "山本権兵衛 $\rightarrow$ 桂太郎 $\rightarrow$ 寺内正毅 $\rightarrow$ 大隈重信"
+                ],
+                answer: 1,
+                explanation: "第2次西園寺 $\rightarrow$ 第3次桂（大正政変で倒閣） $\rightarrow$ 第1次山本（シーメンス事件で辞任） $\rightarrow$ 第2次大隈（二十一ヵ条要求） $\rightarrow$ 寺内正毅（米騒動で倒閣）の順です。"
+            },
+            // Q15: 正解 = 3番 (index 2)
+            {
+                category: "15. 第一次世界大戦中の日本軍事行動 (No.54)",
+                question: "第一次世界大戦中、日本海軍がイギリスなど連合国の要請を受けて艦隊を派遣し、連合国輸送船の護衛にあたった海域はどこか？",
+                options: [
+                    "ペルシャ湾",
+                    "カリブ海",
+                    "地中海",
+                    "バルト海"
+                ],
+                answer: 2,
+                explanation: "日本海軍は特務艦隊（第二特務艦隊）を地中海へ派遣し、ドイツ潜水艦（Uボート）の脅威から連合国の輸送船を補給・護衛しました。"
+            },
+            // Q16: 正解 = 4番 (index 3)
+            {
+                category: "16. 中国の政体変化 (No.54)",
+                question: "1911年に孫文の三民主義などを背景に勃発し、1912年に清朝を滅亡させて中華民国を成立させた革命は何か？",
+                options: [
+                    "光緒新政",
+                    "戊戌の変法",
+                    "太平天国の乱",
+                    "辛亥革命"
+                ],
+                answer: 3,
+                explanation: "1911年の辛亥革命（しんがいかくめい）により、2000年以上続いた中国の皇帝政治が終わり、中華民国（大総統：袁世凱）が誕生しました。"
+            }
+        ];
+
+        // ... existing quiz logic script ...
+        let currentIdx = 0;
+        let score = 0;
+        let combo = 0;
+        let correctNum = 0;
+        let isAnswered = false;
+
+        const startScreen = document.getElementById('start-screen');
+        const quizScreen = document.getElementById('quiz-screen');
+        const resultScreen = document.getElementById('result-screen');
+
+        const questionNumber = document.getElementById('question-number');
+        const comboBadge = document.getElementById('combo-badge');
+        const comboCount = document.getElementById('combo-count');
+        const currentScoreEl = document.getElementById('current-score');
+        const progressBar = document.getElementById('progress-bar');
+        const questionCategory = document.getElementById('question-category');
+        const questionText = document.getElementById('question-text');
+        const optionsContainer = document.getElementById('options-container');
+
+        const explanationCard = document.getElementById('explanation-card');
+        const resultIcon = document.getElementById('result-icon');
+        const resultText = document.getElementById('result-text');
+        const explanationText = document.getElementById('explanation-text');
+        const nextBtn = document.getElementById('next-btn');
+
+        function startQuiz() {
+            currentIdx = 0;
+            score = 0;
+            combo = 0;
+            correctNum = 0;
+            isAnswered = false;
+
+            startScreen.classList.add('hidden');
+            resultScreen.classList.add('hidden');
+            quizScreen.classList.remove('hidden');
+
+            showQuestion();
+        }
+
+        function showQuestion() {
+            isAnswered = false;
+            const q = quizData[currentIdx];
+
+            questionNumber.textContent = `Q.${currentIdx + 1} / ${quizData.length}`;
+            currentScoreEl.textContent = score;
+            progressBar.style.width = `${((currentIdx) / quizData.length) * 100}%`;
+
+            if (combo > 1) {
+                comboBadge.classList.remove('hidden');
+                comboCount.textContent = combo;
+            } else {
+                comboBadge.classList.add('hidden');
+            }
+
+            questionCategory.textContent = q.category;
+            questionText.textContent = q.question;
+
+            optionsContainer.innerHTML = '';
+            explanationCard.classList.add('hidden');
+            nextBtn.classList.add('hidden');
+
+            q.options.forEach((opt, idx) => {
+                const btn = document.createElement('button');
+                btn.className = `w-full text-left p-3.5 md:p-4 rounded-2xl font-bold text-xs md:text-sm transition-all duration-200 border-2 border-gray-200 bg-white hover:border-indigo-400 hover:bg-indigo-50/50 flex justify-between items-center group shadow-sm`;
+                btn.innerHTML = `
+                    <span class="flex items-center gap-2">
+                        <span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-gray-100 text-gray-700 text-xs font-black group-hover:bg-indigo-600 group-hover:text-white shrink-0">${idx + 1}</span>
+                        <span>${opt}</span>
+                    </span>
+                    <i class="fa-regular fa-circle text-gray-300 group-hover:text-indigo-400 shrink-0 ml-2"></i>
+                `;
+                btn.onclick = () => checkAnswer(idx, btn);
+                optionsContainer.appendChild(btn);
+            });
+        }
+
+        function checkAnswer(selectedIdx, selectedBtn) {
+            if (isAnswered) return;
+            isAnswered = true;
+
+            const q = quizData[currentIdx];
+            const buttons = optionsContainer.querySelectorAll('button');
+
+            buttons.forEach(btn => btn.disabled = true);
+
+            if (selectedIdx === q.answer) {
+                sound.playCorrect();
+                correctNum++;
+                combo++;
+                const gainedScore = 10 + (combo > 1 ? combo * 2 : 0);
+                score += gainedScore;
+
+                selectedBtn.className = "w-full text-left p-3.5 md:p-4 rounded-2xl font-bold text-xs md:text-sm border-2 border-emerald-500 bg-emerald-50 text-emerald-950 flex justify-between items-center shadow";
+                selectedBtn.querySelector('i').className = "fa-solid fa-circle-check text-emerald-600 text-xl shrink-0 ml-2";
+
+                resultIcon.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-400"></i>`;
+                resultText.textContent = `正解！ (+${gainedScore}pt)`;
+                resultText.className = "font-extrabold text-sm md:text-base text-emerald-400";
+            } else {
+                sound.playWrong();
+                combo = 0;
+
+                selectedBtn.className = "w-full text-left p-3.5 md:p-4 rounded-2xl font-bold text-xs md:text-sm border-2 border-rose-500 bg-rose-50 text-rose-950 flex justify-between items-center shadow";
+                selectedBtn.querySelector('i').className = "fa-solid fa-circle-xmark text-rose-600 text-xl shrink-0 ml-2";
+
+                const correctBtn = buttons[q.answer];
+                correctBtn.className = "w-full text-left p-3.5 md:p-4 rounded-2xl font-bold text-xs md:text-sm border-2 border-emerald-500 bg-emerald-50 text-emerald-950 flex justify-between items-center shadow";
+                correctBtn.querySelector('i').className = "fa-solid fa-circle-check text-emerald-600 text-xl shrink-0 ml-2";
+
+                resultIcon.innerHTML = `<i class="fa-solid fa-circle-xmark text-rose-400"></i>`;
+                resultText.textContent = "不正解...";
+                resultText.className = "font-extrabold text-sm md:text-base text-rose-400";
+            }
+
+            explanationText.textContent = q.explanation;
+            explanationCard.classList.remove('hidden');
+            nextBtn.classList.remove('hidden');
+
+            currentScoreEl.textContent = score;
+        }
+
+        function nextQuestion() {
+            currentIdx++;
+            if (currentIdx < quizData.length) {
+                showQuestion();
+            } else {
+                showResult();
+            }
+        }
+
+        function showResult() {
+            quizScreen.classList.add('hidden');
+            resultScreen.classList.remove('hidden');
+
+            sound.playFinish();
+
+            const finalScoreEl = document.getElementById('final-score');
+            const correctCountText = document.getElementById('correct-count-text');
+            const resultRank = document.getElementById('result-rank');
+            const resultComment = document.getElementById('result-comment');
+            const resultBadge = document.getElementById('result-badge');
+
+            const calculatedScore = Math.min(100, Math.round((correctNum / quizData.length) * 100));
+            finalScoreEl.textContent = calculatedScore;
+            correctCountText.textContent = `${quizData.length}問中 ${correctNum}問 正解`;
+
+            if (calculatedScore === 100) {
+                resultRank.textContent = "🏆 ランク：大正デモクラシー・憲政の神様級（SS級）";
+                resultBadge.className = "inline-block p-4 rounded-full bg-amber-100 text-amber-500 text-5xl mb-3 shadow-inner";
+                resultComment.innerHTML = `<strong>完璧な成績です！</strong><br>第1次護憲運動から第一次世界大戦の戦況・二十一ヵ条の要求、シベリア出兵・米騒動まで完璧にマスターしています！`;
+            } else if (calculatedScore >= 80) {
+                resultRank.textContent = "🥇 ランク：立憲政友会・幹部級（A級）";
+                resultBadge.className = "inline-block p-4 rounded-full bg-indigo-100 text-indigo-600 text-5xl mb-3 shadow-inner";
+                resultComment.innerHTML = `<strong>素晴らしい高得点です！</strong><br>大正政変の背景やシーメンス事件、石井・ランシング協定の理解がしっかり出来ています！`;
+            } else if (calculatedScore >= 50) {
+                resultRank.textContent = "🥈 ランク：吉野作造・民本主義学徒級（B級）";
+                resultBadge.className = "inline-block p-4 rounded-full bg-slate-100 text-slate-600 text-5xl mb-3 shadow-inner";
+                resultComment.innerHTML = `<strong>基本知識はバッチリです！</strong><br>二十一ヵ条要求の内容やシベリア出兵の背景を復習して、さらに高得点を目指しましょう！`;
+            } else {
+                resultRank.textContent = "🥉 ランク：要復習！大正時代入門者（C級）";
+                resultBadge.className = "inline-block p-4 rounded-full bg-rose-100 text-rose-500 text-5xl mb-3 shadow-inner";
+                resultComment.innerHTML = `<strong>伸びしろ十分！</strong><br>授業プリントNo.54を読み直し、「や・お・て・は・た・か・や・き」の首相変遷と出来事を整理してみよう！`;
+            }
+        }
+
+        function toggleMnemonicsModal() {
+            const modal = document.getElementById('mnemonics-modal');
+            modal.classList.toggle('hidden');
+        }
+    </script>
+</body>
+</html>
